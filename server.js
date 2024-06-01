@@ -20,3 +20,17 @@ async function connectToDatabase() {
 }
 
 connectToDatabase();
+
+app.use(express.json());
+
+app.get("/api/favorites", async (req, res) => {
+    try {
+      const favoritesCollection = client.db(dbName).collection("favorites");
+      const favorites = await favoritesCollection.find({}).toArray();
+      res.json(favorites);
+    } catch (err) {
+      console.error("Error fetching favorites:", err);
+      res.status(500).json({ message: "Internal Server Error" });
+    }
+  });
+  
