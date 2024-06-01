@@ -24,13 +24,25 @@ connectToDatabase();
 app.use(express.json());
 
 app.get("/api/favorites", async (req, res) => {
-    try {
-      const favoritesCollection = client.db(dbName).collection("favorites");
-      const favorites = await favoritesCollection.find({}).toArray();
-      res.json(favorites);
-    } catch (err) {
-      console.error("Error fetching favorites:", err);
-      res.status(500).json({ message: "Internal Server Error" });
-    }
-  });
-  
+  try {
+    const favoritesCollection = client.db(dbName).collection("favorites");
+    const favorites = await favoritesCollection.find({}).toArray();
+    res.json(favorites);
+  } catch (err) {
+    console.error("Error fetching favorites:", err);
+    res.status(500).json({ message: "Internal Server Error" });
+  }
+});
+
+app.post("/api/favorites", async (req, res) => {
+  try {
+    const newFavorite = req.body;
+    const favoritesCollection = client.db(dbName).collection("favorites");
+    await favoritesCollection.insertOne(newFavorite);
+    res.status(201).json(newFavorite);
+  } catch (err) {
+    console.error("Error adding favorite:", err);
+    res.status(400).json({ message: "Bad Request" });
+  }
+});
+
