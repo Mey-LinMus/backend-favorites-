@@ -45,6 +45,35 @@ app.post("/favorites/:deviceId", async (req, res) => {
   }
 });
 
+
+app.get("/favorites", async (req, res) => {
+  const { deviceId } = req.query;
+
+  try {
+    const client = await MongoClient.connect(URI, {
+      useNewUrlParser: true,
+      useUnifiedTopology: true,
+    });
+
+    const db = client.db("WorkZen");
+    const favoritesCollection = db.collection("favorites");
+
+    const favorites = await favoritesCollection.findOne({ deviceId });
+
+    res.json(favorites);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: "Error fetching favorites" });
+  }
+});
+
+
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
 });
+
+// server.js
+const express = require("express");
+const { MongoClient } = require("mongodb");
+const cors = require("cors");
+
