@@ -26,7 +26,12 @@ app.use(express.json());
 
 app.post("/favorites/:deviceId", async (req, res) => {
   const deviceId = req.params.deviceId;
-  const favorite = req.body.favorite;
+  const { favorite, name } = req.body;
+
+  if (!favorite || !name) {
+    res.status(400).json({ message: "Favorite and name are required" });
+    return;
+  }
 
   try {
     const db = await connectToDatabase();
@@ -34,7 +39,7 @@ app.post("/favorites/:deviceId", async (req, res) => {
 
     const result = await favoritesCollection.updateOne(
       { deviceId },
-      { $addToSet: { favorites: favorite } },
+      { $addToSet: { favorites: { name, favorite } } },
       { upsert: true }
     );
 
