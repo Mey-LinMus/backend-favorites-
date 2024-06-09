@@ -80,11 +80,11 @@ Om een favoriete combinatie voor een specifiek device, stuur een GET request naa
 
 ## Scripts en Dependencies
 
-Express: Een minimaal en flexibel Node.js webapplicatie framework.
-MongoDB: MongoDB Node.js stuurprogramma om verbinding te maken met een MongoDB database.
-Cors: Middleware voor het inschakelen van CORS (Cross-Origin Resource Sharing).
-Dotenv: Module om omgevingsvariabelen uit een .env-bestand te laden.
-Nodemon: Tool om de server automatisch opnieuw op te starten tijdens de ontwikkeling.
+- Express: Een minimaal en flexibel Node.js webapplicatie framework.
+- MongoDB: MongoDB Node.js stuurprogramma om verbinding te maken met een MongoDB database.
+- Cors: Middleware voor het inschakelen van CORS (Cross-Origin Resource Sharing).
+- Dotenv: Module om omgevingsvariabelen uit een .env-bestand te laden.
+- Nodemon: Tool om de server automatisch opnieuw op te starten tijdens de ontwikkeling.
 
 
 ### Scripts
