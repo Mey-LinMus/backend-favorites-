@@ -54,6 +54,7 @@ app.post("/favorites/:deviceId", async (req, res) => {
   }
 });
 
+
 app.get("/favorites/:deviceId", async (req, res) => {
   const deviceId = req.params.deviceId;
   try {
