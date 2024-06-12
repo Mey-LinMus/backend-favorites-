@@ -6,15 +6,23 @@ require("dotenv").config();
 const PORT = process.env.PORT || 5000;
 const url = process.env.URL;
 const dbName = "WorkZen";
+
 async function connectToDatabase() {
+  let client;
   try {
-    const client = new MongoClient(url);
+    client = new MongoClient(url);
     await client.connect();
     console.log("Connected to the database");
     return client.db(dbName);
   } catch (err) {
     console.error("Error connecting to the database", err);
     throw err;
+  } finally {
+
+    if (client) {
+      await client.close();
+      console.log("MongoDB connection closed");
+    }
   }
 }
 
@@ -26,8 +34,7 @@ app.post("/favorites/:deviceId", async (req, res) => {
   const { favorite, name } = req.body;
 
   if (!favorite || !name) {
-    res.status(400).json({ message: "Favorite and name are required" });
-    return;
+    return res.status(400).json({ message: "Favorite and name are required" });
   }
 
   try {
@@ -40,10 +47,10 @@ app.post("/favorites/:deviceId", async (req, res) => {
       { upsert: true }
     );
 
-    res.json({ message: "Favorite added successfully" });
+    return res.json({ message: "Favorite added successfully" });
   } catch (err) {
     console.error("Error adding favorite", err);
-    res.status(500).json({ message: "Error adding favorite" });
+    return res.status(500).json({ message: "Error adding favorite" });
   }
 });
 
@@ -54,16 +61,23 @@ app.get("/favorites/:deviceId", async (req, res) => {
     const favoritesCollection = db.collection("favorites");
     const favorite = await favoritesCollection.findOne({ deviceId });
     if (!favorite) {
-      res.status(404).json({ message: "Favorite combination not found" });
-      return;
+      return res
+        .status(404)
+        .json({ message: "Favorite combination not found" });
     }
-    res.json(favorite);
+    return res.json(favorite);
   } catch (err) {
     console.error(err);
-    res.status(500).json({ message: "Error fetching favorite combination" });
+    return res
+      .status(500)
+      .json({ message: "Error fetching favorite combination" });
   }
 });
 
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
 });
+
+
+console.log("PORT:", PORT);
+console.log("URL:", url);
